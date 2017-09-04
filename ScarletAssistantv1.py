@@ -11,7 +11,7 @@ import time,sys
 import datetime
 import subprocess
 import pyautogui
-
+import requests
 
 engine=pyttsx.init()
 voices=engine.getProperty('voices')
@@ -28,7 +28,15 @@ def greeting(data):
         engine.say(random.choice(greetings))
         engine.runAndWait()
         main()
-        
+
+def makeJoke():
+    responeData = requests.get("http://api.icndb.com/jokes/random/?escape=javascript")
+    joke = str(responeData.json()['value']['joke'])
+    print joke
+    engine.say(joke)
+    engine.runAndWait()
+    main()
+    
 def search(data):
     driver=webdriver.Chrome()
     driver.get("http://google.com/search?q="+data.split("search",1)[1])
@@ -148,6 +156,8 @@ def main():
                engine.say("Voice now changed,if not use command again")
                engine.runAndWait()
                main()
+       if data=='tell me a joke':
+               makeJoke()
 
                
 
