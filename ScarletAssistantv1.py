@@ -9,6 +9,9 @@ import wikipedia
 from time import strftime
 import time,sys
 import datetime
+import subprocess
+import pyautogui
+
 
 engine=pyttsx.init()
 voices=engine.getProperty('voices')
@@ -24,6 +27,7 @@ engine.runAndWait()
 def greeting(data):
         engine.say(random.choice(greetings))
         engine.runAndWait()
+        main()
         
 def search(data):
     driver=webdriver.Chrome()
@@ -32,33 +36,39 @@ def search(data):
     sentence=wikipedia.summary(wordSearch, sentences=4)
     engine.say(sentence)
     engine.runAndWait()
+    main()
    
     
     
 
 def youtube(data):
-    driver=webdriver.Chrome()
-    driver.get("http://youtube.com")
     engine.say(random.choice(musical))
-    engine.runAndWait()
+    engine.runAndWait()    
+    webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("http://youtube.com")
+
     sleep(2)
+    main()
 def time(data):
     current=strftime("%I:%M")
     engine.say("The current time is "+current)
     engine.runAndWait()
+    main()
 
 def tDate(date):
     dateT=strftime("%B:%d:%A:%Y")
     engine.say("Today's date is "+dateT)
     engine.runAndWait()
+    main()
 def Gmail(data):
         engine.say("Opening Email Client")
         engine.runAndWait
         webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("http://gmail.com")
+        main()
 def Amazon(data):
         engine.say("Opening Amazon to purchase "+data.split('buy',1)[1])
         engine.runAndWait
         webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("https://www.amazon.com/s/field-keywords=",data.split('buy',1)[1])
+        main()
 def SS():
         engine.say("Taking screenshot")
         engine.runAndWait()
@@ -68,23 +78,24 @@ def SS():
         engine.say("Screenshot saved at "+name)
         engine.runAndWait()
         print("Screenshot saved at"+name)
+        main()
         
-"""def calculate(data):
+def calculate(data):
         if 'plus' in data:
                 str.replace("plus","+")
         
         value1,value2= (data.split('calculate',1)[1])
         answer=value1+value2
         engine.say("The answer to that is "+answer)
-        engine.runAndWait()"""
+        engine.runAndWait()
 def locate (data):
         place=data.split('locate',1)[1]
         engine.say("Locating "+ place)
         engine.runAndWait()
         webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("https://www.google.ca/maps/place/"+place+"/")
+        main()
 
-
-while True:        
+def main():        
     with sr.Microphone() as source:
         sleep(1)
         print("Say something then wait.")
@@ -114,7 +125,7 @@ while True:
        if 'thank you' in data:
            engine.say("You are welcome")
            engine.runAndWait()
-       if data=='scarlet':
+       if data=='Scarlet':
                engine.say("Yes, I am here")
        if data=='email':
                Gmail(data)
@@ -126,12 +137,31 @@ while True:
                calculate(data)
        if 'locate' in data:
                locate(data)
+       if data=='Notepad':
+               engine.say("Opening notepad")
+               engine.runAndWait()
+               subprocess.call(['notepad.exe'])
+               
+               main()
+       if data=='change voice' :
+               engine.setProperty('voice',voices[random.randrange(0,2)].id)
+               engine.say("Voice now changed,if not use command again")
+               engine.runAndWait()
+               main()
+
+               
+
+       else:
+            main()
+                       
                
                
     except sr.UnknownValueError:
             sleep (2)
             engine.say("Google Speech Recognition could not understand what you were trying to say")
             engine.runAndWait()
+            main()
     except sr.RequestError as e:
            print("Could not request results from Google Speech Recoginition Service;{0}".format(e))
-    
+           main()
+main()  
