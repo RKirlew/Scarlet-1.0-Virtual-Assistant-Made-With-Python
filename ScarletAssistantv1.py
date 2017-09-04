@@ -1,4 +1,5 @@
 import pyttsx
+from PIL import ImageGrab
 import webbrowser
 import random,os
 import speech_recognition as sr
@@ -57,8 +58,30 @@ def Gmail(data):
 def Amazon(data):
         engine.say("Opening Amazon to purchase "+data.split('buy',1)[1])
         engine.runAndWait
-        webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("https://www.amazon.com/s/field-keywords=",data.split('buy',1)[1]) 
-       
+        webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("https://www.amazon.com/s/field-keywords=",data.split('buy',1)[1])
+def SS():
+        engine.say("Taking screenshot")
+        engine.runAndWait()
+        name=random.randint(1000,300000)
+        time.sleep(5)
+        ImageGrab.grab().save("screenshot"+str(name),"JPEG")
+        engine.say("Screenshot saved at "+name)
+        engine.runAndWait()
+        print("Screenshot saved at"+name)
+        
+"""def calculate(data):
+        if 'plus' in data:
+                str.replace("plus","+")
+        
+        value1,value2= (data.split('calculate',1)[1])
+        answer=value1+value2
+        engine.say("The answer to that is "+answer)
+        engine.runAndWait()"""
+def locate (data):
+        place=data.split('locate',1)[1]
+        engine.say("Locating "+ place)
+        engine.runAndWait()
+        webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("https://www.google.ca/maps/place/"+place+"/")
 
 
 while True:        
@@ -97,6 +120,13 @@ while True:
                Gmail(data)
        if 'buy' in data:
                Amazon(data)
+       if data=='screenshot':
+                SS()
+       if 'calculate' in data:
+               calculate(data)
+       if 'locate' in data:
+               locate(data)
+               
                
     except sr.UnknownValueError:
             sleep (2)
